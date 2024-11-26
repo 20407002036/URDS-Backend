@@ -1,0 +1,18 @@
+services:
+  - type: web # A Python web service named flask-app
+    plan: free
+    name: flask-app
+    runtime: python
+    repo: https://github.com/20407002036/URDS-Backend
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "flask run --host=0.0.0.0 --port=5000"
+    envVars:
+      - key: DB_STRING # Sets DATABASE_URL to the connection string of the flask-app-db database
+        fromDatabase:
+          name: DB_NAME
+          property: connectionString
+
+databases:
+  - name: DB_NAME # A MySQL database named flask-app-db
+    plan: free
+    engine: mysql
