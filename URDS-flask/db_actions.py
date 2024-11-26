@@ -1,6 +1,6 @@
 from dotenv import load_dotenv
 import os
-from comm import Comm
+from comm import Comm, infobip_sms
 import mysql.connector
 
 load_dotenv()
@@ -32,6 +32,7 @@ class DBStorage:
         # Send SMS notification
         # send_sms_notification(f"New data received from sensor {sensor_id}: {data_value}")
         comm.sendSMS(f"New data received from sensor {sensor_id}: {data_value}", phone_numbers)
+        infobip_sms(f"New data received from sensor {sensor_id}: {data_value}", phone_numbers)
         
         # Send email notification
         # send_email_notification("New Sensor Data", f"Data from sensor {sensor_id}: {data_value}")

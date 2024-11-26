@@ -4,6 +4,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import requests
 import smtplib
+import http.client
+import json
 
 load_dotenv()
 
@@ -54,3 +56,28 @@ class Comm:
                 print('SMS sent successfully')
             else:
                 print('Failed to send SMS', response.content)
+
+
+
+def infobip_sms(message, phone_numbers):
+    conn = http.client.HTTPSConnection(os.getenv('INFOBIP_URL'))
+    for number in phone_numbers:
+        payload = json.dumps({
+            "messages": [
+                {
+                    "destinations": [{"to": number}],
+                    "from": "ServiceSMS",
+                    "text": message
+                }
+            ]
+        })
+        headers = {
+            'Authorization': os.getenv('INFOBIP_AUTH'),
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        conn.request("POST", "/sms/2/text/advanced", payload, headers)
+        res = conn.getresponse()
+        data = res.read()
+        print(data.decode("utf-8"))
+    
