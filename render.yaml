@@ -15,4 +15,4 @@ services:
 databases:
   - name: DB_NAME # A MySQL database named flask-app-db
     plan: free
-    engine: mysql
+    #engine: mysql
