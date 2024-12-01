@@ -9,6 +9,10 @@ import json
 
 load_dotenv()
 
+infobipurl = os.getenv("INFOBIP_URL")
+infobipauth = os.getenv("INFOBIP_AUTH")
+
+
 class Comm:
     def __init__(self):
         self.ozeki_sms_url = os.getenv('OZEKI_SMS_URL')
@@ -60,7 +64,7 @@ class Comm:
 
 
 def infobip_sms(message, phone_numbers):
-    conn = http.client.HTTPSConnection(os.getenv('INFOBIP_URL'))
+    conn = http.client.HTTPSConnection(infobipurl)
     for number in phone_numbers:
         payload = json.dumps({
             "messages": [
@@ -72,7 +76,7 @@ def infobip_sms(message, phone_numbers):
             ]
         })
         headers = {
-            'Authorization': os.getenv('INFOBIP_AUTH'),
+            'Authorization': infobipauth,
             'Content-Type': 'application/json',
             'Accept': 'application/json'
         }

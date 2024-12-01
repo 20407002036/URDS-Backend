@@ -1,2 +1,6 @@
 .env
+URDS-flask/.env
 URDS-flask/ozekitest.py
+URDS-flask/.venv
+URDS-flask/Pipfile
+URDS-flask/Pipfile.lock
