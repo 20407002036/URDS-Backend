@@ -58,10 +58,11 @@ def register_user():
     user_email = data.get('user_email')
     user_name= data.get('user_name')
     user_phone_number = data.get('user_phone')
+    password = data.get('password')
 
     try:
         #localdb.register_user(DeviceID, user_email, user_name, user_phone_number)
-        clouddb.store_user_info(DeviceID, user_email, user_name, user_phone_number)
+        clouddb.store_user_info(DeviceID, user_email, user_name, user_phone_number, password)
         return jsonify({'status': 'success', 'message': 'User registered.'}), 201
     except mysql.connector.Error as err:
         return jsonify({'status': 'error', 'message': str(err)}), 500

@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 import firebase_admin
-from firebase_admin import credentials, db
+from firebase_admin import credentials, db, auth
 from datetime import datetime
 import os
 from dotenv import load_dotenv
@@ -34,9 +34,13 @@ class DBStorageCloud:
             "moisturelevel": moisture_value
         })
 
-    def store_user_info(self, device_id, email, username, user_phone_number):
+    def store_user_info(self, device_id, email, username, user_phone_number, password):
         # Define the database path for the user
-        user_ref = db.reference(f"Users/{uuid4()}")
+        user = auth.create_user(
+            email=email,
+            password=password
+        )
+        user_ref = db.reference(f"Users/{user.uid}")
 
         # Set user information
         user_ref.set({
