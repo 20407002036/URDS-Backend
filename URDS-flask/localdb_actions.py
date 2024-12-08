@@ -18,7 +18,7 @@ def send_notifications(sensor_id, data_value, emails, phone_numbers):
     comm.sendEmail("New Sensor Data", f"Data from sensor {sensor_id}: {data_value}", emails)
 
 
-class DBStorage:
+class DBStorageLocal:
 
     def __init__(self):
         self.db_config = {

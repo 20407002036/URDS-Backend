@@ -35,7 +35,7 @@ class Comm:
             msg['Subject'] = subject
             msg.attach(MIMEText(message, 'plain'))
         
-            server = smtplib.SMTP(smtp_server, smtp_port)
+            server = smtplib.SMTP(smtp_server, int(smtp_port))
             server.starttls()
             server.login(smtp_user, smtp_password)
             text = msg.as_string()
