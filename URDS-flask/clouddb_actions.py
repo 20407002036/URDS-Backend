@@ -37,7 +37,7 @@ class DBStorageCloud:
 
     def get_from_cloud_db(self, device_id):
         try:
-            device_ref = db.reference(f"Devices/{device_id}")
+            device_ref = db.reference(f"UrineDetectorSystem/{device_id}")
             data = device_ref.get()
             return data
         except Exception as e:
