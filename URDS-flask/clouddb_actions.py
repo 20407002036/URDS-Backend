@@ -34,6 +34,15 @@ class DBStorageCloud:
             "moisturelevel": moisture_value
         })
 
+
+    def get_from_cloud_db(self, device_id):
+        try:
+            device_ref = db.reference(f"Devices/{device_id}")
+            data = device_ref.get()
+            return data
+        except Exception as e:
+            raise RuntimeError(f"Error fetching data for DeviceID {device_id}: {e}")
+
     def store_user_info(self, device_id, email, username, user_phone_number, password):
         # Define the database path for the user
         user = auth.create_user(

@@ -49,7 +49,29 @@ def add_sensor_data():
     finally:
         print(".")
         #localdb.close()
-        
+
+
+@app.route('/api/v1/get_sensor_data', methods=['GET'])
+def get_sensor_data():
+    try:
+        # Get JSON data from the request
+        data = request.json
+        if not data or 'sensor_id' not in data:
+            return jsonify({"error": "Invalid request, 'sensor_id' is required"}), 400
+
+        # Extract DeviceID
+        device_id = data.get('sensor_id')
+
+        # Fetch data from Firebase
+        sensor_data = clouddb.get_from_cloud_db(device_id)
+
+        if sensor_data:
+            return jsonify({"device_id": device_id, "sensor_data": sensor_data}), 200
+        else:
+            return jsonify({"error": f"No data found for sensor_id {device_id}"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 #Register Users
 @app.route('/api/v1/users/register', methods=['POST'])
 def register_user():
