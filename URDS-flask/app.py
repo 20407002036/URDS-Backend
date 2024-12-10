@@ -7,6 +7,7 @@ import requests
 import smtplib
 from localdb_actions import DBStorageLocal
 from clouddb_actions import DBStorageCloud
+from comm import *
 
 from datetime import datetime
 from dotenv import load_dotenv
@@ -52,6 +53,34 @@ def add_sensor_data():
         print(".")
         #localdb.close()
 
+
+@app.route('/api/v1/send_alert', methods=['POST'])
+def send_alert():
+    # Parse the JSON data from the request
+    data = request.json
+    if not data or 'sensor_id' not in data:
+        return jsonify({'status': 'error', 'message': "Invalid request, 'sensor_id' is required"}), 400
+
+    device_id = data.get('sensor_id')
+
+    try:
+        # Instantiate the communication and database classes
+        comm = Comm()
+
+        # Fetch emails associated with the given DeviceID
+        emails = clouddb.get_emails(device_id)
+        if not emails:
+            return jsonify({'status': 'error', 'message': f'No emails found for DeviceID {device_id}'}), 404
+
+        # Send the alert email
+        comm.sendEmail("Bed Alert!", "Alert, Bed is wet", emails)
+        return jsonify({'status': 'success', 'message': 'Alert sent successfully'}), 200
+
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+    finally:
+        print("Request processed.")
 
 @app.route('/api/v1/get_sensor_data', methods=['GET'])
 def get_sensor_data():
