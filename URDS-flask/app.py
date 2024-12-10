@@ -11,10 +11,12 @@ from clouddb_actions import DBStorageCloud
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+from flask_cors import CORS
 
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app)
 
 # Ozeki SMS Gateway Configuration
 ozeki_sms_url = os.getenv('OZEKI_SMS_URL')
