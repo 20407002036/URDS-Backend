@@ -5,8 +5,13 @@ from firebase_admin import credentials, db, auth
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from comm import *
 
 load_dotenv()
+
+def send_notifications(sensor_id, data_value, emails, phone_numbers):
+    comm = Comm()
+    comm.sendEmail("Bed Alert!", f"Alert, Bed is wet", emails)
 
 
 class DBStorageCloud:
@@ -34,6 +39,11 @@ class DBStorageCloud:
             "moisturelevel": moisture_value
         })
 
+        if moisture_value > 800:
+            emails = self.get_emails(device_id)
+            phonenumbers = []
+            send_notifications(device_id, moisture_value, emails, phonenumbers)
+
 
     def get_from_cloud_db(self, device_id):
         try:
@@ -42,6 +52,23 @@ class DBStorageCloud:
             return data
         except Exception as e:
             raise RuntimeError(f"Error fetching data for DeviceID {device_id}: {e}")
+
+    def get_emails(self, device_id):
+        try:
+            ref = db.reference("Users")
+            users = ref.get()  # Retrieve all users
+
+            # Filter users associated with the given device_id
+            emails = []
+            for user_id, user_info in users.items():
+                if user_info.get("deviceId") == device_id:
+                    emails.append(user_info.get("email"))
+
+            return emails
+
+        except Exception as e:
+            print("Error fetching emails:", e)
+            return None
 
     def store_user_info(self, device_id, email, username, user_phone_number, password):
         # Define the database path for the user
