@@ -54,21 +54,18 @@ def add_sensor_data():
 @app.route('/api/v1/get_sensor_data', methods=['GET'])
 def get_sensor_data():
     try:
-        # Get JSON data from the request
-        data = request.json
-        if not data or 'sensor_id' not in data:
+        # Get sensor_id from query parameters
+        sensor_id = request.args.get('sensor_id')
+        if not sensor_id:
             return jsonify({"error": "Invalid request, 'sensor_id' is required"}), 400
 
-        # Extract DeviceID
-        device_id = data.get('sensor_id')
-
         # Fetch data from Firebase
-        sensor_data = clouddb.get_from_cloud_db(device_id)
+        sensor_data = clouddb.get_from_cloud_db(sensor_id)
 
         if sensor_data:
-            return jsonify({"device_id": device_id, "sensor_data": sensor_data}), 200
+            return jsonify({"device_id": sensor_id, "sensor_data": sensor_data}), 200
         else:
-            return jsonify({"error": f"No data found for sensor_id {device_id}"}), 404
+            return jsonify({"error": f"No data found for sensor_id {sensor_id}"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
