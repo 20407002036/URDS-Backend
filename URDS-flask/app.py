@@ -42,7 +42,7 @@ def add_sensor_data():
     data = request.json
     DeviceID = data.get('sensor_id')
     data_value = data.get('data_value')
-    
+
     try:
         #localdb.save(DeviceID, data_value)
         clouddb.save_to_cloud_db(DeviceID, data_value)

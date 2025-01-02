@@ -29,9 +29,9 @@ class DBStorageLocal:
 }
         self.conn = mysql.connector.connect(**self.db_config)
         self.cursor = self.conn.cursor()
-        
+
     def save(self, DeviceID, data_value):
-        
+
         self.cursor.execute("INSERT INTO Readings (DeviceID, MoistureLevel) VALUES (%s, %s)", (DeviceID, data_value))
         self.conn.commit()
         if data_value > 50: #Data value is subject to chanage depending on the sensor
@@ -42,7 +42,7 @@ class DBStorageLocal:
     def get_user_emails(self, sensor_id):
         self.cursor.execute("SELECT Email FROM Users WHERE DeviceID = %s", (sensor_id,))
         return self.cursor.fetchall()
-    
+
     def get_user_phone_numbers(self, sensor_id):
         self.cursor.execute("SELECT Phone FROM Users WHERE DeviceID = %s", (sensor_id,))
         return self.cursor.fetchall()

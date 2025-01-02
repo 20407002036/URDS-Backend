@@ -22,7 +22,7 @@ class Comm:
         self.smtp_port = os.getenv('SMTP_PORT')
         self.smtp_user = os.getenv('SMTP_USER')
         self.smtp_password = os.getenv('SMTP_PASSWORD')
-    
+
     def sendEmail(self, subject, message, emails):
         smtp_server = self.smtp_server
         smtp_port = self.smtp_port
@@ -34,7 +34,7 @@ class Comm:
             msg['To'] = email
             msg['Subject'] = subject
             msg.attach(MIMEText(message, 'plain'))
-        
+
             server = smtplib.SMTP(smtp_server, int(smtp_port))
             server.starttls()
             server.login(smtp_user, smtp_password)
@@ -46,7 +46,7 @@ class Comm:
         ozeki_sms_url = self.ozeki_sms_url
         ozeki_username = self.ozeki_username
         ozeki_password = self.ozeki_password
-        
+
         for phone_number in phone_numbers:
             payload = {
                 'username': ozeki_username,
@@ -84,4 +84,3 @@ def infobip_sms(message, phone_numbers):
         res = conn.getresponse()
         data = res.read()
         print(data.decode("utf-8"))
-    
