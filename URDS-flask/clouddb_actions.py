@@ -60,11 +60,13 @@ class DBStorageCloud:
 
             # Filter users associated with the given device_id
             emails = []
+            names = []
             for user_id, user_info in users.items():
                 if user_info.get("deviceId") == device_id:
                     emails.append(user_info.get("email"))
+                    names.append(user_info.get("name"))
 
-            return emails
+            return emails, names
 
         except Exception as e:
             print("Error fetching emails:", e)

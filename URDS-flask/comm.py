@@ -23,23 +23,25 @@ class Comm:
         self.smtp_user = os.getenv('SMTP_USER')
         self.smtp_password = os.getenv('SMTP_PASSWORD')
 
-    def sendEmail(self, subject, message, emails):
+    def sendEmail(self, subject, message,emails, names):
         smtp_server = self.smtp_server
         smtp_port = self.smtp_port
         smtp_user = self.smtp_user
         smtp_password = self.smtp_password
+        i =0
         for email in emails:
             msg = MIMEMultipart()
             msg['From'] = smtp_user
             msg['To'] = email
             msg['Subject'] = subject
-            msg.attach(MIMEText(message, 'plain'))
+            msg.attach(MIMEText("Hi " +names[i] +"\n " + message, 'plain'))
+            i+=1
 
             server = smtplib.SMTP(smtp_server, int(smtp_port))
             server.starttls()
             server.login(smtp_user, smtp_password)
             text = msg.as_string()
-            server.sendmail(smtp_user, smtp_user, text)
+            server.sendmail(smtp_user, email, text)
             server.quit()
 
     def sendSMS(self, message, phone_numbers):
