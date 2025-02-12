@@ -2,7 +2,7 @@
 from crypt import methods
 
 from flask import Flask, request, jsonify
-import mysql.connector
+# import mysql.connector
 import requests
 import smtplib
 from localdb_actions import DBStorageLocal
@@ -42,7 +42,7 @@ def add_sensor_data():
     data = request.json
     DeviceID = data.get('sensor_id')
     data_value = data.get('data_value')
-    
+
     try:
         #localdb.save(DeviceID, data_value)
         clouddb.save_to_cloud_db(DeviceID, data_value)
@@ -68,12 +68,12 @@ def send_alert():
         comm = Comm()
 
         # Fetch emails associated with the given DeviceID
-        emails = clouddb.get_emails(device_id)
+        emails, names = clouddb.get_emails(device_id)
         if not emails:
             return jsonify({'status': 'error', 'message': f'No emails found for DeviceID {device_id}'}), 404
 
         # Send the alert email
-        comm.sendEmail("Bed Alert!", "Alert, Bed is wet", emails)
+        comm.sendEmail("Bed Alert!", "Alert, Bed is wet", emails, names)
         return jsonify({'status': 'success', 'message': 'Alert sent successfully'}), 200
 
     except Exception as e:
@@ -110,15 +110,15 @@ def register_user():
     user_phone_number = data.get('user_phone')
     password = data.get('password')
 
-    try:
+    # try:
         #localdb.register_user(DeviceID, user_email, user_name, user_phone_number)
-        clouddb.store_user_info(DeviceID, user_email, user_name, user_phone_number, password)
-        return jsonify({'status': 'success', 'message': 'User registered.'}), 201
-    except mysql.connector.Error as err:
-        return jsonify({'status': 'error', 'message': str(err)}), 500
-    finally:
-        print(".")
-         #localdb.close(}
+    clouddb.store_user_info(DeviceID, user_email, user_name, user_phone_number, password)
+    return jsonify({'status': 'success', 'message': 'User registered.'}), 201
+    # except mysql.connector.Error as err:
+    #     return jsonify({'status': 'error', 'message': str(err)}), 500
+    # finally:
+    #     print(".")
+    #      localdb.close(}
 
 if __name__ == '__main__':
     app.run(debug=True)
